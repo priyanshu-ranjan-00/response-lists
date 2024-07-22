@@ -42,7 +42,6 @@ exports.registerUser = async (req, res) => {
 
     await newUser.save();
 
-    // Generate token and set cookie
     generateTokenAndSetCookie(newUser._id, res);
 
     res.status(201).json({
@@ -54,8 +53,8 @@ exports.registerUser = async (req, res) => {
       },
     });
   } catch (error) {
+    // console.log("Error registering user: ", error.message);
     res.status(500).json({ success: false, message: error.message });
-    console.log("Error registering user: ", error.message);
   }
 };
 
@@ -72,7 +71,6 @@ exports.loginUser = async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    // Generate token and set cookie
     generateTokenAndSetCookie(user._id, res);
 
     res.status(200).json({
@@ -84,7 +82,17 @@ exports.loginUser = async (req, res) => {
       },
     });
   } catch (error) {
+    // console.log("Error logging in user: ", error.message);
     res.status(500).json({ success: false, message: error.message });
-    console.log("Error logging in user: ", error.message);
   }
+};
+
+// Logout user
+exports.logoutUser = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+  res.status(200).json({ success: true, message: "Logged out successfully" });
 };

@@ -6,14 +6,14 @@ import Header from "../components/Header";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(""); // To handle error messages
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post("/api/auth/login", { email, password });
-      localStorage.setItem("userInfo", JSON.stringify(data)); // Store user info in localStorage
+      localStorage.setItem("userInfo", JSON.stringify(data)); // to store userInfo in localStorage
       navigate("/");
     } catch (error) {
       setError(error.response?.data?.message || "An error occurred");
